@@ -44,4 +44,4 @@ def PersonalInfo(request, user_id):
 
 def user_Payments(request, user_id):
     payments = Payments.objects.filter(user_id=user_id)
-    return render(request, "Payments.html", {"payments": payments})
+    return render(request, "payments.html", {"payments": payments})
