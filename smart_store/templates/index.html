@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div id="loading-screen"
+     class="fixed inset-0 flex flex-col items-center justify-center bg-black text-white z-50 opacity-100">
+
+    <!-- LOADING Text -->
+    <div class="text-3xl font-bold tracking-widest mb-4 animate-pulse">LOADING</div>
+
+    <!-- Loading Bar -->
+    <div class="w-2/3 h-2 bg-gray-700 rounded overflow-hidden mb-4">
+        <div class="h-full bg-gradient-to-r from-white to-gray-400 animate-loading-bar"></div>
+    </div>
+
+    <!-- Code Strip -->
+    <div class="text-cyan-400 text-xs whitespace-nowrap overflow-hidden w-2/3 animate-marquee">
+        0101011101101001010101010010010111010101001011101001001000100101010101...
+    </div>
+</div>
+<!-- Main -->
+<main class="pt-24 px-6 max-w-7xl mx-auto hidden" id="main-content">
+    {% if page_obj.object_list %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {% for product in page_obj %}
+        <div class="bg-white rounded-xl shadow hover:shadow-lg transition p-4 flex flex-col">
+            <div class="flex flex-col gap-4">
+                {% if product.in_cart %}
+                <a href="{% url 'remove_from_cart_index' product.id %}" title="Add to Cart">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         fill="blue"
+                         viewBox="0 0 24 24"
+                         stroke-width="1.5"
+                         stroke="currentColor"
+                         class="size-6 hover:cursor-pointer">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/>
+                    </svg>
+                </a>
+                {% else %}
+                <a href="{% url 'add_to_cart_index' product.id %}" title="Add to Cart">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         fill="white"
+                         viewBox="0 0 24 24"
+                         stroke-width="1.5"
+                         stroke="currentColor"
+                         class="size-6 hover:cursor-pointer">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/>
+                    </svg>
+                </a>
+                {% endif %}
+                {% if product.in_wishlist %}
+                <!-- Wishlist -->
+                <a href="{% url 'remove_from_wishlist_index' product.id %}" title="Add to Wishlist">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         fill="red"
+                         viewBox="0 0 24 24"
+                         stroke-width="1.5"
+                         stroke="currentColor"
+                         class="size-6 hover:cursor-pointer">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
+                    </svg>
+                </a>
+                {% else %}
+                <a href="{% url 'add_to_wishlist_index' product.id %}" title="Add to Wishlist">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         fill="white"
+                         viewBox="0 0 24 24"
+                         stroke-width="1.5"
+                         stroke="currentColor"
+                         class="size-6 hover:cursor-pointer">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
+                    </svg>
+                </a>
+                {% endif %}
+            </div>
+            {% if product.image %}
+            <a href="{% url 'product' product.id %}">
+                <img src="{% static 'product_img/' %}{{ product.id }}.jpg" alt="{{ product.name }}"
+                     class="w-full h-48 object-contain mb-4">
+            </a>
+            {% else %}
+            <a href="{% url 'product' product.id %}">
+                <img src="{% static 'images/logo.png'%}" alt="{{ product.name }}"
+                     class="w-full h-48 object-contain mb-4">
+            </a>
+            {% endif %}
+            <h2 class="text-lg font-semibold text-gray-800 truncate">{{ product.name }}</h2>
+            <p class="text-indigo-600 font-bold text-xl mt-2">&#8377;{{ product.sales_price }}</p>
+            <a href="{% url 'product' product.id %}"
+               class="mt-auto bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
+                Order Now
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div class="mt-10 flex justify-center space-x-2">
+        {% if page_obj.has_previous %}
+        <a href="?q={{ query }}&page={{ page_obj.previous_page_number }}"
+           class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded">Previous</a>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+        <span class="px-4 py-2 bg-indigo-600 text-white rounded">{{ num }}</span>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <a href="?q={{ query }}&page={{ num }}"
+           class="px-4 py-2 bg-gray-200 hover:bg-indigo-400 hover:text-white rounded">{{ num }}</a>
+        {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+        <a href="?q={{ query }}&page={{ page_obj.next_page_number }}"
+           class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded">Next</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div class="text-center mt-20 text-xl text-red-600 font-medium">
+        No products found{% if query %} for "{{ query }}"{% endif %}.
+    </div>
+    {% endif %}
+</main>
+
+<script>
+    const clearBtn = document.getElementById("clearSearch");
+    const searchInput = document.getElementById("searchInput");
+
+    if (clearBtn && searchInput) {
+        clearBtn.addEventListener("click", () => {
+            searchInput.value = '';
+            searchInput.focus();
+        });
+    }
+</script>
+<style>
+    @keyframes loading-bar {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+    .animate-loading-bar {
+      animation: loading-bar 3s linear forwards;
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+    .animate-marquee {
+      animation: marquee 5s linear infinite;
+    }
+</style>
+
+<!-- Script to Hide Loader -->
+<script>
+    window.addEventListener("load", () => {
+     document.getElementById("loading-screen").classList.add("opacity-0", "transition-opacity", "duration-500");
+     setTimeout(() => {
+       document.getElementById("loading-screen").style.display = "none";
+       document.getElementById("main-content").classList.remove("hidden");
+     }, 500); // Hide after fade-out completes
+   });
+</script>
+
+{% endblock %}

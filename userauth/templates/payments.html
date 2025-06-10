@@ -1,0 +1,65 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Payments</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+</head>
+<body class="bg-gray-100 min-h-screen font-sans">
+
+<div class="max-w-6xl mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">Your Payments</h1>
+        <a href="{{ request.META.HTTP_REFERER }}" class="inline-flex items-center text-blue-600 hover:text-blue-800">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                 stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-1">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"/>
+            </svg>
+            Back to Home
+        </a>
+    </div>
+    {% if payments %}
+    <form method="get" class="mb-6 flex items-center space-x-4">
+        <div>
+            <label for="start" class="text-sm font-semibold text-gray-700">Start Date:</label>
+            <input type="date" name="start" id="start" value="{{ request.GET.start }}"
+                   class="border border-gray-300 px-2 py-1 rounded">
+        </div>
+        <div>
+            <label for="end" class="text-sm font-semibold text-gray-700">End Date:</label>
+            <input type="date" name="end" id="end" value="{{ request.GET.end }}"
+                   class="border border-gray-300 px-2 py-1 rounded">
+        </div>
+        <div>
+            <button type="submit"
+                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                Filter
+            </button>
+        </div>
+    </form>
+    <!-- Orders Table -->
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <table class="min-w-full table-auto text-sm">
+            <thead class="bg-gray-200 text-gray-700 uppercase text-xs">
+            <tr>
+                <th class="px-6 py-3 text-left">Payment ID</th>
+            </tr>
+            </thead>
+            <tbody class="text-gray-700 divide-y divide-gray-200">
+            {% for payment in payments %}
+            <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4">{{ payment.id }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p>No Payments</p>
+    {% endif %}
+</div>
+
+</body>
+</html>

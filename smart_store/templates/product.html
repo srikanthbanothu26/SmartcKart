@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ product.name }}{% endblock %}
+{% block extra_head %}
+<link type="icon" rel="shortcut icon" href="{% static '' %}product_img/{{ product.id }}.jpg"/>
+{% endblock %}
+{% block content %}
+<main class="pt-24 px-6 max-w-7xl mx-auto">
+    <div class="flex items-center justify-end w-full mx-auto hover:text-blue-600">
+        <div class="flex items-center justify-between w-full">
+            <div>
+                {% if request.user.is_staff %}
+                <a href="/admin/smart_store/product/{{ product.id }}/change/"
+                   class="mt-2 inline-block px-3 py-1 text-sm bg-indigo-500 text-white rounded hover:bg-indigo-600 text-center">
+                    Edit
+                </a>
+                {% endif %}
+            </div>
+            <a href="{% url 'index' %}" class="cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                     stroke="currentColor"
+                     class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"/>
+                </svg>
+                Home
+            </a>
+        </div>
+    </div>
+    <div class="grid grid-cols-2">
+        <div class="flex flex-col p-4">
+            <h1 class="text-3xl font-bold mb-4">{{ product.name }}</h1>
+            <div class="flex flex-col items-center justify-center h-full gap-4">
+                <span class="flex items-center border-2 border-gray-300 rounded-md gap-4 h-12 px-4">
+                    <button id="decrement" class="border-r-2 h-full flex items-center pr-4 cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                             stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14"/>
+                        </svg>
+                    </button>
+
+                    <span id="qty" data-price="{{ product.sales_price }}" data-available="{{ product.avail_qty }}"
+                          data-product-id="{{ product.id }}"
+                          data-name="{{ product.name }}">{{ product.qty }}</span>
+                    <button id="increment" class="border-l-2 h-full flex items-center pl-4 cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                             stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+                        </svg>
+                    </button>
+                </span>
+                <p class="text-xl font-semibold">
+                    <span id="sales-price">{{ product.sales_price }}</span> / {{ product.unit_of_measurement }}
+                </p>
+            </div>
+            <a id="buy-now-btn" class="flex cursor-pointer items-center justify-center">
+                <p class="border-2 p-2 bg-red-400 rounded-md">
+                    <b>Buy Now</b>
+                    <span id="sales-price2">{{ product.sales_price }}</span> / {{ product.unit_of_measurement }}
+                </p>
+            </a>
+            <p id="availability-status" class="mt-4 text-lg font-semibold text-green-600"></p>
+        </div>
+        <div class="flex flex-col items-center justify-center h-full">
+            <div class="flex flex-col gap-4">
+                <!-- Add to Cart -->
+                {% if in_cart %}
+                <a href="{% url 'remove_from_cart' product.id %}" title="Add to Cart">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         fill="blue"
+                         viewBox="0 0 24 24"
+                         stroke-width="1.5"
+                         stroke="currentColor"
+                         class="size-6 hover:cursor-pointer">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/>
+                    </svg>
+                </a>
+                {% else %}
+                <a href="{% url 'add_to_cart' product.id %}" title="Add to Cart">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         fill="white"
+                         viewBox="0 0 24 24"
+                         stroke-width="1.5"
+                         stroke="currentColor"
+                         class="size-6 hover:cursor-pointer">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/>
+                    </svg>
+                </a>
+                {% endif %}
+                {% if in_wishlist %}
+                <!-- Wishlist -->
+                <a href="{% url 'remove_from_wishlist' product.id %}" title="Add to Wishlist">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         fill="red"
+                         viewBox="0 0 24 24"
+                         stroke-width="1.5"
+                         stroke="currentColor"
+                         class="size-6 hover:cursor-pointer">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
+                    </svg>
+                </a>
+                {% else %}
+                <a href="{% url 'add_to_wishlist' product.id %}" title="Add to Wishlist">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         fill="white"
+                         viewBox="0 0 24 24"
+                         stroke-width="1.5"
+                         stroke="currentColor"
+                         class="size-6 hover:cursor-pointer">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
+                    </svg>
+                </a>
+                {% endif %}
+            </div>
+            <img src="{% static 'product_img/' %}{{ product.id }}.jpg"
+                 alt="{{ product.name }}"
+                 title="{{ product.name }}"
+                 class="max-w-full h-auto rounded shadow">
+
+        </div>
+    </div>
+</main>
+<script src="{% static 'js/product.js' %}?v=1.1"></script>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cart</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <link rel="icon" href="{% static 'images/logo.png' %}">
+</head>
+<style>
+    @keyframes loading-bar {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+    .animate-loading-bar {
+      animation: loading-bar 3s linear forwards;
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+    .animate-marquee {
+      animation: marquee 5s linear infinite;
+    }
+</style>
+<body class="bg-gray-100 min-h-screen font-sans">
+<div id="loading-screen" class="fixed inset-0 flex flex-col items-center justify-center bg-black text-white z-50">
+
+    <!-- LOADING Text -->
+    <div class="text-3xl font-bold tracking-widest mb-4 animate-pulse">LOADING</div>
+
+    <!-- Loading Bar -->
+    <div class="w-2/3 h-2 bg-gray-700 rounded overflow-hidden mb-4">
+        <div class="h-full bg-gradient-to-r from-white to-gray-400 animate-loading-bar"></div>
+    </div>
+
+    <!-- Code Strip -->
+    <div class="text-cyan-400 text-xs whitespace-nowrap overflow-hidden w-2/3 animate-marquee">
+        0101011101101001010101010010010111010101001011101001001000100101010101...
+    </div>
+</div>
+
+<div class="max-w-6xl mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">CARTS</h1>
+        <a href="{% url 'index' %}" class="inline-flex items-center text-blue-600 hover:text-blue-800">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                 stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-1">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"/>
+            </svg>
+            Back to Home
+        </a>
+    </div>
+    {% if cart_items %}
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <table class="min-w-full table-auto text-sm">
+            <thead class="bg-gray-200 text-gray-700 uppercase text-xs">
+            <tr>
+                <th class="px-6 py-3 text-left">Product Name</th>
+                <th class="px-6 py-3 text-left">Quantity</th>
+                <th class="px-6 py-3 text-left">Amount</th>
+            </tr>
+            </thead>
+            <tbody class="text-gray-700 divide-y divide-gray-200">
+            {% for cart in cart_items %}
+            <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 font-medium">
+                    <a href="{%url 'product' cart.product.id %}">{{ cart.product.name }}</a></td>
+                <td class="px-6 py-4">{{ cart.product.qty }}</td>
+                <td class="px-6 py-4 font-medium">{{ cart.product.sales_price }}</td>
+                <td>
+                    <a href="{% url 'remove_from_cart_items' cart.product.id %}">Remove</a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p>No products in Cart</p>
+    {% endif %}
+</div>
+
+
+<!-- Script to Hide Loader -->
+<script>
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        document.getElementById("loading-screen").style.display = "none";
+        document.getElementById("main-content").classList.remove("hidden");
+      }, 3200); // Wait till loading bar completes
+    });
+</script>
+
+</body>
+</html>

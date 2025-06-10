@@ -1,0 +1,77 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <link rel="icon" href="{% static 'images/logo.png' %}">
+    <title>{% block title %}SMart-Home{% endblock %}</title>}
+    {% block extra_head %}
+    {% endblock %}
+    {% block child_styles %}
+    {% endblock %}
+
+    {% block child_main_scripts %}
+    {% endblock %}
+
+</head>
+<body class="bg-gray-100 font-sans">
+<!-- Header -->
+<header class="bg-white shadow-md fixed top-0 w-full z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+        <a href="{% url 'index' %}" class="flex items-center gap-2">
+            <img src="{% static 'images/logo.png' %}" class="w-10 h-10" alt="Logo">
+            <h1 class="text-2xl font-bold text-indigo-600">SmartKart</h1>
+        </a>
+
+        <!-- Search -->
+        <form method="get" class="flex-1 mx-8">
+            <input list="suggestions" type="search" name="q" id="searchInput" value="{{ query }}"
+                   placeholder="Search for products..."
+                   class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+            <datalist id="suggestions">
+                <option value="desk">
+                <option value="stand">
+                <option value="shirt">
+                <option value="sofa">
+                <option value="shoes">
+            </datalist>
+        </form>
+
+        <div class="flex items-center space-x-4">
+            <a href="{% url 'order_list' %}" class="text-sm font-medium text-gray-700 hover:text-indigo-600">Orders</a>
+            <a href="{% url 'cart_items'%}" class="text-sm font-medium text-gray-700 hover:text-indigo-600">Cart</a>
+            <a href="{% url 'wishlist_products'%}" class="text-sm font-medium text-gray-700 hover:text-indigo-600">Wishlists</a>
+            {% if user.is_authenticated %}
+            <div class="flex gap-4 items-center">
+                <a href="{% url 'user_info' user.id %}"
+                   class="text-xl font-medium text-gray-700 hover:text-indigo-600 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                         stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                    </svg>
+                    {{ user.username }}
+                </a>
+                <a href="{% url 'user_logout'%}">logout</a>
+                <!-- Dropdown on hover -->
+            </div>
+            {% else %}
+            <a href="{% url 'user_login' %}" class="text-sm font-medium text-gray-700 hover:text-indigo-600">
+                Login
+            </a>
+            <a href="{% url 'user_register' %}" class="text-sm font-medium text-gray-700 hover:text-indigo-600">
+                create Account
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+{% block content %}
+{% endblock %}
+
+{% block child_scripts %}
+{% endblock %}
+
+</body>
+</html>
