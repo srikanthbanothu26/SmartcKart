@@ -1,4 +1,4 @@
 smart_store/__pycache__/
 SmartKart/__pycache__/
-*.pyc
+*.py[cod]
 userauth/__pycache__/
