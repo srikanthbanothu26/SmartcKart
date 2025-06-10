@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-$%mql+t$+0d1a^vk5(ly2tyvau2l5#^uw*cqphh37^$00(5jcn
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["nursing-velma-srkm-577246b1.koyeb.app", ]
 
 # Application definition
 
