@@ -1,0 +1,4 @@
+smart_store/__pycache__/
+SmartKart/__pycache__/
+*.pyc
+userauth/__pycache__/
